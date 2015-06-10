@@ -1,0 +1,20 @@
+Kurzanleitung TeachersCal
+Das Programm tr‰gt dir deinen Stundenplan in den Google Calendar ein. 
+Wiederkehrende Termine wie Schulstunden die abh‰ngig von geraden oder 
+ungeraden Wochen Schulferien und Feiertagen sind lassen sich so 
+komfortabel in einem zus‰tzlichen Kalender (Layer) eintragen.
+
+1.  TeachersCal ist ein Java-Programm also zu erst Java installieren.
+2.  Die Eingabeaufforderung ˆffnen und in das Verzeichnis gehen 
+    in dem die Dateien TeachersCal.jat und init.js befinden
+3.  Pr¸fen ob die richtige Java Version installiert ist. 
+    java ñversion eintippen
+        C:\TeachersCal>java ñversion
+    sollte mind 1.6 sein z.B.
+        java version "1.6.0_26"
+        Java(TM) SE Runtime Environment (build 1.6.0_26-b03)
+        Java HotSpot(TM) Client VM (build 20.1-b02, mixed mode, sharing)
+4.  Die init.js Datei bearbeiten
+5.  Das Programm starten mit java -jar TeachersCal.jar kontoname@googlemail.com passwort
+
+Viel Spaﬂ Stefan

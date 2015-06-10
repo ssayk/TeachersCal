@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+ $Id$
+
+$Author:$, $Date:$
+$Revision:$$
+
+History:
+ $Log$
+
+-->
+<project name="TeachersCal" default="help" basedir=".">
+
+<!-- ===================== Property Definitions =========================== -->
+
+    <!--
+         All properties should be defined in this section.
+	 Any host-specific properties should be defined
+	 in the build.properties file.
+
+	 In this app, the following properties are defined in build.properties:
+
+	 o  tomcat.home     - the dir directory of your Tomcat installation
+	 o  webapps.dir    - the place to copy the war file to deploy it
+    -->
+
+  <property file="build.properties" />
+
+<!-- ==================== Compilation Classpath =========================== -->
+
+    <!--
+         This section creates the classpath for compilation.
+    -->
+
+  <path id="compile.classpath">
+
+    <!-- The object files for this application -->
+    <pathelement location="${object.dir}"/>
+
+    <!-- The lib files for this application -->    
+    <fileset dir="${lib.dir}">
+      <include name="*.jar"/>
+      <include name="*.zip"/>
+    </fileset>
+
+  </path>
+  
+
+<!-- ==================== Build Targets below here========================= -->
+
+<!-- ==================== "help" Target =================================== -->
+
+    <!--
+         This is the default ant target executed if no target is specified.
+	 This helps avoid users just typeing 'ant' and running a
+	 default target that may not do what they are anticipating...
+    -->
+
+  <target name="help" >
+    <echo message="Please specify a target! [usage: ant &lt;targetname&gt;]" />
+    <echo message="Here is a list of possible targets: "/>
+    <echo message="  clean.........Delete build dir, all .class and jar files"/>
+    <echo message="  prepare.......Creates directories if required" />
+    <echo message="  compile.......Compiles source files" />
+    <echo message="  build.........Build jar file from .class and other files"/>
+  </target>
+<!-- ==================== "clean" Target ============================== -->
+
+    <!--
+          This target should clean up any traces of the application
+	  so that if you run a new build directly after cleaning, all
+	  files will be replaced with what's current in source control
+    -->
+
+  <target name="clean" >
+    <delete dir="${object.dir}"/>
+    <delete dir="${build.dir}"/>   
+  </target>
+  
+<!-- ==================== "prepare" Target ================================ -->
+
+    <!--
+          This target is executed prior to any of the later targets
+	  to make sure the directories exist. It only creates them
+	  if they need to be created....
+
+	  Other, similar, preparation steps can be placed here.
+    -->
+
+  <target name="prepare">
+
+
+    <mkdir  dir="${object.dir}"/>
+    <mkdir  dir="${build.dir}"/>
+
+  </target> 
+
+<!-- ==================== "compile" Target ================================ -->
+
+    <!--
+          This only compiles java files that are newer
+	  than their corresponding .class files.
+     -->
+
+  <target name="compile" depends="prepare"  >
+    <javac srcdir="${src.dir}"
+           destdir="${object.dir}"
+           debug="${debug}"
+           compiler="javac1.6"
+           fork="yes"
+           memoryInitialSize="512m"
+           memoryMaximumSize="768M">
+        <classpath refid="compile.classpath"/>
+    </javac>
+    
+    <copy    todir="${object.dir}">
+      <fileset dir="${src.dir}">
+        <include name="**/*.properties" />
+        <include name="**/*.prop" />
+        <include name="**/*.xml" />
+        <include name="**/*.jpg" />
+        <include name="**/*.gif" />
+        <include name="**/*.png" />
+        <include name="de/bnext/res/**"/>
+      </fileset>
+    </copy>  
+
+    <unzip dest="${object.dir}">
+        <fileset dir="${lib.dir}">
+            <include name="*.jar" />
+        </fileset>
+    </unzip>
+
+  </target>  
+
+<!-- ==================== "build" Target ================================== -->
+
+    <!--
+          This target builds the war file for the application
+	  by first building the directory structure of the
+          application in ${build.dir} and then creating the
+	  war file using the ant <war> task
+    -->
+
+  <target name="build" depends="compile" >
+
+    <!-- Create the <jar> file -->
+    <jar jarfile="${build.dir}/${app.name}.jar"
+         basedir="${object.dir}">
+         
+          <manifest>
+            <attribute name="Built-By" value="Stefan Sayk"/>
+            <attribute name="Main-Class" value="de.sayk.Main" />
+          </manifest>
+
+    </jar>
+
+    <copy file="${src.base.dir}/info.txt" tofile="${build.dir}/info.txt"/>
+    <copy file="${src.base.dir}/init.js" tofile="${build.dir}/init.js"/>
+
+
+  </target>
+
+</project>
